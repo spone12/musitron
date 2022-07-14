@@ -17,6 +17,7 @@ namespace MusicApp
         private System.Windows.Forms.Button openFolderButton;
         private System.Windows.Forms.Button startPlayButton;
         private System.Windows.Forms.ListBox musicBox;
+        private System.Windows.Forms.Button stopMusicButton;
     }
 }
 

@@ -17,7 +17,7 @@ namespace MusicApp
     public partial class Musitron : Form
     {
         protected string selectedFolderPath;
-        //MessageBox.Show(selectedFolderPath);
+        WMPLib.WindowsMediaPlayer MediaPlayer;
 
         public Musitron()
         {
@@ -28,10 +28,19 @@ namespace MusicApp
         {
             if(musicBox.SelectedIndex != -1)
             {
-               MessageBox.Show("ind=" + musicBox.SelectedIndex + " item=" + musicBox.SelectedItem.ToString());
+                string fullFileNameString = musicBox.SelectedItem.ToString();
+                string fileName = fullFileNameString.Split('{').Last().Split('}').First() + ".mp3";
+
+                playMusic(fileName);
             }
         }
-            private void openFolder(object sender, EventArgs e)
+
+        private void stopMusicButton_Click(object sender, EventArgs e)
+        {
+            stopMusic();
+        }
+
+        private void openFolder(object sender, EventArgs e)
         {
             FolderBrowserDialog FBD = new FolderBrowserDialog();
 
@@ -48,7 +57,6 @@ namespace MusicApp
                         var extension = Path.GetExtension(file);
                         if (extension != null && extension.Contains("mp3")) 
                         { 
-                            //MessageBox.Show(file);
                             string fileName = Path.GetFileNameWithoutExtension(file); 
 
                             ListViewItem item = new ListViewItem(fileName);
@@ -58,26 +66,27 @@ namespace MusicApp
                         }
                     }
                 }
-                    
-
-            }
-        }
-
-        private void ergergergerW(object sender, MouseEventArgs e)
-        {
-            var senderList = (ListView)sender;
-            var clickedItem = senderList.HitTest(e.Location).Item;
-            if (clickedItem != null)
-            {
-                MessageBox.Show("fgsdfsd");
             }
         }
 
         public void playMusic(string file)
         {
-            WMPLib.WindowsMediaPlayer WMP = new WMPLib.WindowsMediaPlayer();
-            WMP.URL = file;
-            WMP.controls.play();
+            MediaPlayer = new WMPLib.WindowsMediaPlayer();
+            MediaPlayer.URL = this.selectedFolderPath + "\\" + file;
+            MediaPlayer.controls.play();
+
+        }
+
+        public void stopMusic()
+        {
+            if (MediaPlayer != null)
+            {
+                try
+                {
+                    MediaPlayer.controls.stop();
+                }
+                catch (Exception) { }
+            }
         }
 
         private void InitializeComponent()
@@ -85,11 +94,12 @@ namespace MusicApp
             this.openFolderButton = new System.Windows.Forms.Button();
             this.startPlayButton = new System.Windows.Forms.Button();
             this.musicBox = new System.Windows.Forms.ListBox();
+            this.stopMusicButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // openFolderButton
             // 
-            this.openFolderButton.Location = new System.Drawing.Point(71, 31);
+            this.openFolderButton.Location = new System.Drawing.Point(37, 31);
             this.openFolderButton.Name = "openFolderButton";
             this.openFolderButton.Size = new System.Drawing.Size(114, 23);
             this.openFolderButton.TabIndex = 0;
@@ -99,7 +109,7 @@ namespace MusicApp
             // 
             // startPlayButton
             // 
-            this.startPlayButton.Location = new System.Drawing.Point(283, 31);
+            this.startPlayButton.Location = new System.Drawing.Point(199, 31);
             this.startPlayButton.Name = "startPlayButton";
             this.startPlayButton.Size = new System.Drawing.Size(75, 23);
             this.startPlayButton.TabIndex = 1;
@@ -115,9 +125,20 @@ namespace MusicApp
             this.musicBox.Size = new System.Drawing.Size(361, 160);
             this.musicBox.TabIndex = 2;
             // 
+            // stopMusicButton
+            // 
+            this.stopMusicButton.Location = new System.Drawing.Point(323, 31);
+            this.stopMusicButton.Name = "stopMusicButton";
+            this.stopMusicButton.Size = new System.Drawing.Size(75, 23);
+            this.stopMusicButton.TabIndex = 3;
+            this.stopMusicButton.Text = "Стоп";
+            this.stopMusicButton.UseVisualStyleBackColor = true;
+            this.stopMusicButton.Click += new System.EventHandler(this.stopMusicButton_Click);
+            // 
             // Musitron
             // 
             this.ClientSize = new System.Drawing.Size(418, 259);
+            this.Controls.Add(this.stopMusicButton);
             this.Controls.Add(this.musicBox);
             this.Controls.Add(this.startPlayButton);
             this.Controls.Add(this.openFolderButton);
