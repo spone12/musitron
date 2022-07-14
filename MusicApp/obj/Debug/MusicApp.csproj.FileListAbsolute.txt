@@ -1,0 +1,12 @@
+F:\Visual studio\musicApp\MusicApp\MusicApp\bin\Debug\MusicApp.exe.config
+F:\Visual studio\musicApp\MusicApp\MusicApp\bin\Debug\MusicApp.exe
+F:\Visual studio\musicApp\MusicApp\MusicApp\bin\Debug\MusicApp.pdb
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.csproj.AssemblyReference.cache
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.Properties.Resources.resources
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.csproj.GenerateResource.cache
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.csproj.CoreCompileInputs.cache
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.exe
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.pdb
+F:\Visual studio\musicApp\MusicApp\MusicApp\bin\Debug\AxInterop.WMPLib.dll
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.csproj.CopyComplete
+F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.Musitron.resources
