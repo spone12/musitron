@@ -20,6 +20,7 @@ namespace MusicApp
         WMPLib.WindowsMediaPlayer MediaPlayer;
         protected bool isPlayMusic = false;
         Timer songTimer;
+        protected string pathIcons = Environment.CurrentDirectory + "\\..\\..\\img\\";
 
         public Musitron()
         {
@@ -28,18 +29,29 @@ namespace MusicApp
 
         private void playMusicButton(object sender, EventArgs e)
         {
-            if(musicBox.SelectedIndex != -1)
+           
+            if (musicBox.SelectedIndex != -1)
             {
-                string fullFileNameString = musicBox.SelectedItem.ToString();
-                string fileName = fullFileNameString.Split('{').Last().Split('}').First() + ".mp3";
+                if (!isPlayMusic)
+                {
+                    if (MediaPlayer != null)
+                    {
+                        stopMusic();
+                    }
+                    else
+                    {
+                        string fullFileNameString = musicBox.SelectedItem.ToString();
+                        string fileName = fullFileNameString.Split('{').Last().Split('}').First() + ".mp3";
 
-                playMusic(fileName);
+                        playMusic(fileName);
+                        startPlayButton.Image = Image.FromFile(pathIcons + "pause.png");
+                    }
+                }
+                else
+                {
+                    stopMusic(true);
+                }
             }
-        }
-
-        private void stopMusicButton_Click(object sender, EventArgs e)
-        {
-            stopMusic();
         }
 
         private void openFolder(object sender, EventArgs e)
@@ -73,6 +85,7 @@ namespace MusicApp
 
         public void playMusic(string file)
         {
+           
             string filePath = this.selectedFolderPath + "\\" + file;
             if (!File.Exists(filePath))
             {
@@ -89,15 +102,26 @@ namespace MusicApp
             songTimerProgress();
         }
 
-        public void stopMusic()
+        public void stopMusic(bool isStop = false)
         {
             if (MediaPlayer != null)
             {
                 try
                 {
-                    MediaPlayer.controls.stop();
-                    isPlayMusic = false;
-                    songTimerOutput.Text = "00:00";
+                    if (isStop)
+                    {
+                        startPlayButton.Image = Image.FromFile(pathIcons + "play-button.png");
+                        MediaPlayer.controls.pause();
+                        isPlayMusic = false;
+                    }
+                    else
+                    {
+                        startPlayButton.Image = Image.FromFile(pathIcons + "pause.png");
+                        MediaPlayer.controls.play();
+                        isPlayMusic = true;
+                    }
+                   
+                   
                 }
                 catch (Exception) { }
             }
@@ -135,14 +159,15 @@ namespace MusicApp
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Musitron));
             this.openFolderButton = new System.Windows.Forms.Button();
-            this.startPlayButton = new System.Windows.Forms.Button();
             this.musicBox = new System.Windows.Forms.ListBox();
-            this.stopMusicButton = new System.Windows.Forms.Button();
             this.soundVolume = new System.Windows.Forms.TrackBar();
             this.songTimerOutput = new System.Windows.Forms.TextBox();
             this.songProgressBar = new System.Windows.Forms.ProgressBar();
+            this.startPlayButton = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPlayButton)).BeginInit();
             this.SuspendLayout();
             // 
             // openFolderButton
@@ -155,16 +180,6 @@ namespace MusicApp
             this.openFolderButton.UseVisualStyleBackColor = true;
             this.openFolderButton.Click += new System.EventHandler(this.openFolder);
             // 
-            // startPlayButton
-            // 
-            this.startPlayButton.Location = new System.Drawing.Point(213, 31);
-            this.startPlayButton.Name = "startPlayButton";
-            this.startPlayButton.Size = new System.Drawing.Size(75, 23);
-            this.startPlayButton.TabIndex = 1;
-            this.startPlayButton.Text = "Запуск";
-            this.startPlayButton.UseVisualStyleBackColor = true;
-            this.startPlayButton.Click += new System.EventHandler(this.playMusicButton);
-            // 
             // musicBox
             // 
             this.musicBox.FormattingEnabled = true;
@@ -172,16 +187,6 @@ namespace MusicApp
             this.musicBox.Name = "musicBox";
             this.musicBox.Size = new System.Drawing.Size(384, 160);
             this.musicBox.TabIndex = 2;
-            // 
-            // stopMusicButton
-            // 
-            this.stopMusicButton.Location = new System.Drawing.Point(346, 31);
-            this.stopMusicButton.Name = "stopMusicButton";
-            this.stopMusicButton.Size = new System.Drawing.Size(75, 23);
-            this.stopMusicButton.TabIndex = 3;
-            this.stopMusicButton.Text = "Стоп";
-            this.stopMusicButton.UseVisualStyleBackColor = true;
-            this.stopMusicButton.Click += new System.EventHandler(this.stopMusicButton_Click);
             // 
             // soundVolume
             // 
@@ -209,18 +214,30 @@ namespace MusicApp
             this.songProgressBar.Size = new System.Drawing.Size(175, 38);
             this.songProgressBar.TabIndex = 7;
             // 
+            // startPlayButton
+            // 
+            this.startPlayButton.Image = ((System.Drawing.Image)(resources.GetObject("startPlayButton.Image")));
+            this.startPlayButton.InitialImage = ((System.Drawing.Image)(resources.GetObject("startPlayButton.InitialImage")));
+            this.startPlayButton.Location = new System.Drawing.Point(194, 12);
+            this.startPlayButton.Name = "startPlayButton";
+            this.startPlayButton.Size = new System.Drawing.Size(34, 42);
+            this.startPlayButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.startPlayButton.TabIndex = 9;
+            this.startPlayButton.TabStop = false;
+            this.startPlayButton.Click += new System.EventHandler(this.playMusicButton);
+            // 
             // Musitron
             // 
             this.ClientSize = new System.Drawing.Size(457, 301);
+            this.Controls.Add(this.startPlayButton);
             this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songTimerOutput);
             this.Controls.Add(this.soundVolume);
-            this.Controls.Add(this.stopMusicButton);
             this.Controls.Add(this.musicBox);
-            this.Controls.Add(this.startPlayButton);
             this.Controls.Add(this.openFolderButton);
             this.Name = "Musitron";
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startPlayButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

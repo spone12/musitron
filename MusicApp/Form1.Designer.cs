@@ -15,12 +15,11 @@ namespace MusicApp
         }
 
         private System.Windows.Forms.Button openFolderButton;
-        private System.Windows.Forms.Button startPlayButton;
         private System.Windows.Forms.ListBox musicBox;
-        private System.Windows.Forms.Button stopMusicButton;
         private System.Windows.Forms.TrackBar soundVolume;
         private System.Windows.Forms.TextBox songTimerOutput;
         private System.Windows.Forms.ProgressBar songProgressBar;
+        private System.Windows.Forms.PictureBox startPlayButton;
     }
 }
 
