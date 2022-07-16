@@ -20,6 +20,8 @@ namespace MusicApp
         private System.Windows.Forms.TextBox songTimerOutput;
         private System.Windows.Forms.ProgressBar songProgressBar;
         private System.Windows.Forms.PictureBox startPlayButton;
+        private System.Windows.Forms.PictureBox prevSongButton;
+        private System.Windows.Forms.PictureBox nextSongButton;
     }
 }
 

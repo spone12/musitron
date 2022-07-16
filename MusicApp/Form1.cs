@@ -40,9 +40,7 @@ namespace MusicApp
                     }
                     else
                     {
-                        string fullFileNameString = musicBox.SelectedItem.ToString();
-                        string fileName = fullFileNameString.Split('{').Last().Split('}').First() + ".mp3";
-
+                        string fileName = getMusicName();
                         playMusic(fileName);
                         startPlayButton.Image = Image.FromFile(pathIcons + "pause.png");
                     }
@@ -51,6 +49,43 @@ namespace MusicApp
                 {
                     stopMusic(true);
                 }
+            }
+        }
+
+        private string getMusicName()
+        {
+            string fullFileNameString = musicBox.SelectedItem.ToString();
+            string fileName = fullFileNameString.Split('{').Last().Split('}').First() + ".mp3";
+            return fileName;
+        }
+
+        private void prevSongButton_Click(object sender, EventArgs e)
+        {
+            changeSong(false);
+        }
+
+        private void nextSongButton_Click(object sender, EventArgs e)
+        {
+            changeSong();   
+        }
+
+        private void changeSong(bool next = true)
+        {
+            if (musicBox.SelectedIndex != -1)
+            {
+                int index = musicBox.SelectedIndex + 1;
+                if (!next && musicBox.SelectedIndex != 0)
+                {
+                    index = musicBox.SelectedIndex - 1;
+                }
+
+                if(!next && musicBox.SelectedIndex == 0)
+                {
+                    index = musicBox.SelectedIndex;
+                }
+
+                musicBox.SelectedIndex = Math.Min(index, musicBox.Items.Count - 1);
+                playMusic(getMusicName());
             }
         }
 
@@ -91,8 +126,13 @@ namespace MusicApp
             {
                 throw new FileNotFoundException("File " + filePath + " doesn't exist");
             }
-            stopMusic();
-         
+
+            if(MediaPlayer != null)
+            {
+                MediaPlayer.close();
+                isPlayMusic = false;
+            }
+           
             MediaPlayer = new WMPLib.WindowsMediaPlayer();
             MediaPlayer.URL = filePath;
             setMusicVolume(soundVolume.Value);
@@ -166,13 +206,17 @@ namespace MusicApp
             this.songTimerOutput = new System.Windows.Forms.TextBox();
             this.songProgressBar = new System.Windows.Forms.ProgressBar();
             this.startPlayButton = new System.Windows.Forms.PictureBox();
+            this.prevSongButton = new System.Windows.Forms.PictureBox();
+            this.nextSongButton = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPlayButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.prevSongButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nextSongButton)).BeginInit();
             this.SuspendLayout();
             // 
             // openFolderButton
             // 
-            this.openFolderButton.Location = new System.Drawing.Point(37, 31);
+            this.openFolderButton.Location = new System.Drawing.Point(25, 31);
             this.openFolderButton.Name = "openFolderButton";
             this.openFolderButton.Size = new System.Drawing.Size(114, 23);
             this.openFolderButton.TabIndex = 0;
@@ -183,16 +227,16 @@ namespace MusicApp
             // musicBox
             // 
             this.musicBox.FormattingEnabled = true;
-            this.musicBox.Location = new System.Drawing.Point(37, 75);
+            this.musicBox.Location = new System.Drawing.Point(25, 60);
             this.musicBox.Name = "musicBox";
-            this.musicBox.Size = new System.Drawing.Size(384, 160);
+            this.musicBox.Size = new System.Drawing.Size(403, 160);
             this.musicBox.TabIndex = 2;
             // 
             // soundVolume
             // 
-            this.soundVolume.Location = new System.Drawing.Point(278, 241);
+            this.soundVolume.Location = new System.Drawing.Point(345, 274);
             this.soundVolume.Name = "soundVolume";
-            this.soundVolume.Size = new System.Drawing.Size(143, 50);
+            this.soundVolume.Size = new System.Drawing.Size(83, 50);
             this.soundVolume.TabIndex = 4;
             this.soundVolume.Value = 10;
             this.soundVolume.Scroll += new System.EventHandler(this.soundVolume_Scroll);
@@ -200,7 +244,7 @@ namespace MusicApp
             // songTimerOutput
             // 
             this.songTimerOutput.Enabled = false;
-            this.songTimerOutput.Location = new System.Drawing.Point(37, 250);
+            this.songTimerOutput.Location = new System.Drawing.Point(25, 283);
             this.songTimerOutput.Name = "songTimerOutput";
             this.songTimerOutput.Size = new System.Drawing.Size(54, 20);
             this.songTimerOutput.TabIndex = 5;
@@ -209,26 +253,50 @@ namespace MusicApp
             // 
             // songProgressBar
             // 
-            this.songProgressBar.Location = new System.Drawing.Point(97, 241);
+            this.songProgressBar.Location = new System.Drawing.Point(85, 283);
             this.songProgressBar.Name = "songProgressBar";
-            this.songProgressBar.Size = new System.Drawing.Size(175, 38);
+            this.songProgressBar.Size = new System.Drawing.Size(254, 29);
             this.songProgressBar.TabIndex = 7;
             // 
             // startPlayButton
             // 
             this.startPlayButton.Image = ((System.Drawing.Image)(resources.GetObject("startPlayButton.Image")));
             this.startPlayButton.InitialImage = ((System.Drawing.Image)(resources.GetObject("startPlayButton.InitialImage")));
-            this.startPlayButton.Location = new System.Drawing.Point(194, 12);
+            this.startPlayButton.Location = new System.Drawing.Point(187, 226);
             this.startPlayButton.Name = "startPlayButton";
-            this.startPlayButton.Size = new System.Drawing.Size(34, 42);
+            this.startPlayButton.Size = new System.Drawing.Size(60, 51);
             this.startPlayButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.startPlayButton.TabIndex = 9;
             this.startPlayButton.TabStop = false;
             this.startPlayButton.Click += new System.EventHandler(this.playMusicButton);
             // 
+            // prevSongButton
+            // 
+            this.prevSongButton.Image = ((System.Drawing.Image)(resources.GetObject("prevSongButton.Image")));
+            this.prevSongButton.Location = new System.Drawing.Point(153, 239);
+            this.prevSongButton.Name = "prevSongButton";
+            this.prevSongButton.Size = new System.Drawing.Size(28, 29);
+            this.prevSongButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.prevSongButton.TabIndex = 10;
+            this.prevSongButton.TabStop = false;
+            this.prevSongButton.Click += new System.EventHandler(this.prevSongButton_Click);
+            // 
+            // nextSongButton
+            // 
+            this.nextSongButton.Image = ((System.Drawing.Image)(resources.GetObject("nextSongButton.Image")));
+            this.nextSongButton.Location = new System.Drawing.Point(253, 239);
+            this.nextSongButton.Name = "nextSongButton";
+            this.nextSongButton.Size = new System.Drawing.Size(28, 30);
+            this.nextSongButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.nextSongButton.TabIndex = 11;
+            this.nextSongButton.TabStop = false;
+            this.nextSongButton.Click += new System.EventHandler(this.nextSongButton_Click);
+            // 
             // Musitron
             // 
-            this.ClientSize = new System.Drawing.Size(457, 301);
+            this.ClientSize = new System.Drawing.Size(437, 326);
+            this.Controls.Add(this.nextSongButton);
+            this.Controls.Add(this.prevSongButton);
             this.Controls.Add(this.startPlayButton);
             this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songTimerOutput);
@@ -238,6 +306,8 @@ namespace MusicApp
             this.Name = "Musitron";
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPlayButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.prevSongButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nextSongButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
