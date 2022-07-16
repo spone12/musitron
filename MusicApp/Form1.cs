@@ -122,10 +122,15 @@ namespace MusicApp
             songTimer.Interval = 1000;
             songTimer.Start();
 
+            double percent = 0;
+
             songTimer.Tick += (o, e) =>
             {
+                percent = ((double)MediaPlayer.controls.currentPosition / MediaPlayer.controls.currentItem.duration);
+                songProgressBar.Value = (int)(percent * songProgressBar.Maximum);
+
                 songTimerOutput.Text = MediaPlayer.controls.currentPositionString;
-            }; 
+            };
         }
 
         private void InitializeComponent()
@@ -136,6 +141,7 @@ namespace MusicApp
             this.stopMusicButton = new System.Windows.Forms.Button();
             this.soundVolume = new System.Windows.Forms.TrackBar();
             this.songTimerOutput = new System.Windows.Forms.TextBox();
+            this.songProgressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).BeginInit();
             this.SuspendLayout();
             // 
@@ -179,9 +185,9 @@ namespace MusicApp
             // 
             // soundVolume
             // 
-            this.soundVolume.Location = new System.Drawing.Point(97, 241);
+            this.soundVolume.Location = new System.Drawing.Point(278, 241);
             this.soundVolume.Name = "soundVolume";
-            this.soundVolume.Size = new System.Drawing.Size(324, 50);
+            this.soundVolume.Size = new System.Drawing.Size(143, 50);
             this.soundVolume.TabIndex = 4;
             this.soundVolume.Value = 10;
             this.soundVolume.Scroll += new System.EventHandler(this.soundVolume_Scroll);
@@ -189,16 +195,24 @@ namespace MusicApp
             // songTimerOutput
             // 
             this.songTimerOutput.Enabled = false;
-            this.songTimerOutput.Location = new System.Drawing.Point(37, 241);
+            this.songTimerOutput.Location = new System.Drawing.Point(37, 250);
             this.songTimerOutput.Name = "songTimerOutput";
             this.songTimerOutput.Size = new System.Drawing.Size(54, 20);
             this.songTimerOutput.TabIndex = 5;
             this.songTimerOutput.Text = "00:00";
             this.songTimerOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // songProgressBar
+            // 
+            this.songProgressBar.Location = new System.Drawing.Point(97, 241);
+            this.songProgressBar.Name = "songProgressBar";
+            this.songProgressBar.Size = new System.Drawing.Size(175, 38);
+            this.songProgressBar.TabIndex = 7;
+            // 
             // Musitron
             // 
-            this.ClientSize = new System.Drawing.Size(450, 291);
+            this.ClientSize = new System.Drawing.Size(457, 301);
+            this.Controls.Add(this.songProgressBar);
             this.Controls.Add(this.songTimerOutput);
             this.Controls.Add(this.soundVolume);
             this.Controls.Add(this.stopMusicButton);
