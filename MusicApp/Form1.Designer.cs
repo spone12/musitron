@@ -19,6 +19,7 @@ namespace MusicApp
         private System.Windows.Forms.ListBox musicBox;
         private System.Windows.Forms.Button stopMusicButton;
         private System.Windows.Forms.TrackBar soundVolume;
+        private System.Windows.Forms.TextBox songTimerOutput;
     }
 }
 

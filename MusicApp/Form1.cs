@@ -18,6 +18,8 @@ namespace MusicApp
     {
         protected string selectedFolderPath;
         WMPLib.WindowsMediaPlayer MediaPlayer;
+        protected bool isPlayMusic = false;
+        Timer songTimer;
 
         public Musitron()
         {
@@ -77,11 +79,14 @@ namespace MusicApp
                 throw new FileNotFoundException("File " + filePath + " doesn't exist");
             }
             stopMusic();
-
+         
             MediaPlayer = new WMPLib.WindowsMediaPlayer();
             MediaPlayer.URL = filePath;
+            setMusicVolume(soundVolume.Value);
             MediaPlayer.controls.play();
 
+            isPlayMusic = true;
+            songTimerProgress();
         }
 
         public void stopMusic()
@@ -91,6 +96,8 @@ namespace MusicApp
                 try
                 {
                     MediaPlayer.controls.stop();
+                    isPlayMusic = false;
+                    songTimerOutput.Text = "00:00";
                 }
                 catch (Exception) { }
             }
@@ -98,7 +105,6 @@ namespace MusicApp
 
         private void soundVolume_Scroll(object sender, System.EventArgs e)
         {
-            // Display the trackbar value in the text box.
             setMusicVolume(soundVolume.Value);
         }
 
@@ -110,6 +116,18 @@ namespace MusicApp
             }
         }
 
+        public void songTimerProgress()
+        {
+            songTimer = new Timer();
+            songTimer.Interval = 1000;
+            songTimer.Start();
+
+            songTimer.Tick += (o, e) =>
+            {
+                songTimerOutput.Text = MediaPlayer.controls.currentPositionString;
+            }; 
+        }
+
         private void InitializeComponent()
         {
             this.openFolderButton = new System.Windows.Forms.Button();
@@ -117,6 +135,7 @@ namespace MusicApp
             this.musicBox = new System.Windows.Forms.ListBox();
             this.stopMusicButton = new System.Windows.Forms.Button();
             this.soundVolume = new System.Windows.Forms.TrackBar();
+            this.songTimerOutput = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).BeginInit();
             this.SuspendLayout();
             // 
@@ -132,7 +151,7 @@ namespace MusicApp
             // 
             // startPlayButton
             // 
-            this.startPlayButton.Location = new System.Drawing.Point(199, 31);
+            this.startPlayButton.Location = new System.Drawing.Point(213, 31);
             this.startPlayButton.Name = "startPlayButton";
             this.startPlayButton.Size = new System.Drawing.Size(75, 23);
             this.startPlayButton.TabIndex = 1;
@@ -145,12 +164,12 @@ namespace MusicApp
             this.musicBox.FormattingEnabled = true;
             this.musicBox.Location = new System.Drawing.Point(37, 75);
             this.musicBox.Name = "musicBox";
-            this.musicBox.Size = new System.Drawing.Size(361, 160);
+            this.musicBox.Size = new System.Drawing.Size(384, 160);
             this.musicBox.TabIndex = 2;
             // 
             // stopMusicButton
             // 
-            this.stopMusicButton.Location = new System.Drawing.Point(323, 31);
+            this.stopMusicButton.Location = new System.Drawing.Point(346, 31);
             this.stopMusicButton.Name = "stopMusicButton";
             this.stopMusicButton.Size = new System.Drawing.Size(75, 23);
             this.stopMusicButton.TabIndex = 3;
@@ -160,16 +179,27 @@ namespace MusicApp
             // 
             // soundVolume
             // 
-            this.soundVolume.Location = new System.Drawing.Point(77, 241);
+            this.soundVolume.Location = new System.Drawing.Point(97, 241);
             this.soundVolume.Name = "soundVolume";
-            this.soundVolume.Size = new System.Drawing.Size(283, 50);
+            this.soundVolume.Size = new System.Drawing.Size(324, 50);
             this.soundVolume.TabIndex = 4;
             this.soundVolume.Value = 10;
             this.soundVolume.Scroll += new System.EventHandler(this.soundVolume_Scroll);
             // 
+            // songTimerOutput
+            // 
+            this.songTimerOutput.Enabled = false;
+            this.songTimerOutput.Location = new System.Drawing.Point(37, 241);
+            this.songTimerOutput.Name = "songTimerOutput";
+            this.songTimerOutput.Size = new System.Drawing.Size(54, 20);
+            this.songTimerOutput.TabIndex = 5;
+            this.songTimerOutput.Text = "00:00";
+            this.songTimerOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // Musitron
             // 
-            this.ClientSize = new System.Drawing.Size(418, 291);
+            this.ClientSize = new System.Drawing.Size(450, 291);
+            this.Controls.Add(this.songTimerOutput);
             this.Controls.Add(this.soundVolume);
             this.Controls.Add(this.stopMusicButton);
             this.Controls.Add(this.musicBox);
