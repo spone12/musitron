@@ -54,7 +54,7 @@ namespace MusicApp
 
         private string getMusicName()
         {
-            return musicBox.SelectedItem.ToString() + ".mp3";
+            return musicBox.SelectedItem.ToString();
         }
 
         private void prevSongButton_Click(object sender, EventArgs e)
@@ -118,8 +118,12 @@ namespace MusicApp
 
         public void playMusic(string file)
         {
-           
-            string filePath = this.selectedFolderPath + "\\" + file;
+            string filePath = file;
+            if (!String.IsNullOrEmpty(this.selectedFolderPath))
+            {
+                filePath = this.selectedFolderPath + "\\" + file + ".mp3";
+            }
+
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException("File " + filePath + " doesn't exist");
@@ -229,6 +233,9 @@ namespace MusicApp
             this.musicBox.Name = "musicBox";
             this.musicBox.Size = new System.Drawing.Size(403, 160);
             this.musicBox.TabIndex = 2;
+            this.musicBox.AllowDrop = true;
+            this.musicBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.musicBox_DragDrop);
+            this.musicBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.musicBox_DragEnter);
             // 
             // soundVolume
             // 
@@ -309,6 +316,18 @@ namespace MusicApp
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void musicBox_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+        }
+
+        private void musicBox_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string file in files)
+                musicBox.Items.Add(file);
         }
     }
 }
