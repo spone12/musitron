@@ -54,9 +54,7 @@ namespace MusicApp
 
         private string getMusicName()
         {
-            string fullFileNameString = musicBox.SelectedItem.ToString();
-            string fileName = fullFileNameString.Split('{').Last().Split('}').First() + ".mp3";
-            return fileName;
+            return musicBox.SelectedItem.ToString() + ".mp3";
         }
 
         private void prevSongButton_Click(object sender, EventArgs e)
@@ -74,14 +72,17 @@ namespace MusicApp
             if (musicBox.SelectedIndex != -1)
             {
                 int index = musicBox.SelectedIndex + 1;
-                if (!next && musicBox.SelectedIndex != 0)
-                {
-                    index = musicBox.SelectedIndex - 1;
-                }
 
-                if(!next && musicBox.SelectedIndex == 0)
+                if (!next)
                 {
-                    index = musicBox.SelectedIndex;
+                    if(musicBox.SelectedIndex == 0)
+                    {
+                        index = musicBox.SelectedIndex;
+                    }
+                    else
+                    {
+                        index = musicBox.SelectedIndex - 1;
+                    }
                 }
 
                 musicBox.SelectedIndex = Math.Min(index, musicBox.Items.Count - 1);
@@ -107,10 +108,7 @@ namespace MusicApp
                         if (extension != null && extension.Contains("mp3")) 
                         { 
                             string fileName = Path.GetFileNameWithoutExtension(file); 
-
-                            ListViewItem item = new ListViewItem(fileName);
-                            item.Tag = file;
-                            musicBox.Items.Add(item); 
+                            musicBox.Items.Add(fileName); 
 
                         }
                     }
