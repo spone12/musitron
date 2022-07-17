@@ -22,6 +22,7 @@ namespace MusicApp
         private System.Windows.Forms.PictureBox startPlayButton;
         private System.Windows.Forms.PictureBox prevSongButton;
         private System.Windows.Forms.PictureBox nextSongButton;
+        private System.Windows.Forms.PictureBox shuffleMusicButton;
     }
 }
 

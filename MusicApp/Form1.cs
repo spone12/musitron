@@ -210,10 +210,12 @@ namespace MusicApp
             this.startPlayButton = new System.Windows.Forms.PictureBox();
             this.prevSongButton = new System.Windows.Forms.PictureBox();
             this.nextSongButton = new System.Windows.Forms.PictureBox();
+            this.shuffleMusicButton = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.soundVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPlayButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prevSongButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nextSongButton)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.shuffleMusicButton)).BeginInit();
             this.SuspendLayout();
             // 
             // openFolderButton
@@ -228,12 +230,12 @@ namespace MusicApp
             // 
             // musicBox
             // 
+            this.musicBox.AllowDrop = true;
             this.musicBox.FormattingEnabled = true;
             this.musicBox.Location = new System.Drawing.Point(25, 60);
             this.musicBox.Name = "musicBox";
             this.musicBox.Size = new System.Drawing.Size(403, 160);
             this.musicBox.TabIndex = 2;
-            this.musicBox.AllowDrop = true;
             this.musicBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.musicBox_DragDrop);
             this.musicBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.musicBox_DragEnter);
             // 
@@ -297,9 +299,21 @@ namespace MusicApp
             this.nextSongButton.TabStop = false;
             this.nextSongButton.Click += new System.EventHandler(this.nextSongButton_Click);
             // 
+            // shuffleMusicButton
+            // 
+            this.shuffleMusicButton.Image = ((System.Drawing.Image)(resources.GetObject("shuffleMusicButton.Image")));
+            this.shuffleMusicButton.Location = new System.Drawing.Point(106, 238);
+            this.shuffleMusicButton.Name = "shuffleMusicButton";
+            this.shuffleMusicButton.Size = new System.Drawing.Size(33, 30);
+            this.shuffleMusicButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.shuffleMusicButton.TabIndex = 12;
+            this.shuffleMusicButton.TabStop = false;
+            this.shuffleMusicButton.Click += new System.EventHandler(this.shuffleMusicButton_Click);
+            // 
             // Musitron
             // 
             this.ClientSize = new System.Drawing.Size(437, 326);
+            this.Controls.Add(this.shuffleMusicButton);
             this.Controls.Add(this.nextSongButton);
             this.Controls.Add(this.prevSongButton);
             this.Controls.Add(this.startPlayButton);
@@ -313,6 +327,7 @@ namespace MusicApp
             ((System.ComponentModel.ISupportInitialize)(this.startPlayButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.prevSongButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nextSongButton)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.shuffleMusicButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -328,6 +343,18 @@ namespace MusicApp
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string file in files)
                 musicBox.Items.Add(file);
+        }
+
+        private void shuffleMusicButton_Click(object sender, EventArgs e)
+        {
+            if (musicBox.SelectedIndex != -1)
+            {
+                Random random = new Random();
+                int randomSong = random.Next(1, musicBox.Items.Count - 1);
+
+                musicBox.SelectedIndex = randomSong;
+                playMusic(getMusicName());
+            }
         }
     }
 }
