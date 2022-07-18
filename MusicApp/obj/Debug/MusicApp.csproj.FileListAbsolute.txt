@@ -10,3 +10,4 @@ F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.pdb
 F:\Visual studio\musicApp\MusicApp\MusicApp\bin\Debug\AxInterop.WMPLib.dll
 F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.csproj.CopyComplete
 F:\Visual studio\musicApp\MusicApp\MusicApp\obj\Debug\MusicApp.Musitron.resources
+F:\Visual studio\musicApp\MusicApp\MusicApp\bin\Debug\taglib-sharp.dll

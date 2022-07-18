@@ -16,7 +16,7 @@ namespace MusicApp
 {
     public partial class Musitron : Form
     {
-        protected string selectedFolderPath;
+        protected Dictionary<int, string> importedSongsPaths = new Dictionary<int, string>();
         WMPLib.WindowsMediaPlayer MediaPlayer;
         protected bool isPlayMusic = false;
         Timer songTimer;
@@ -40,8 +40,7 @@ namespace MusicApp
                     }
                     else
                     {
-                        string fileName = getMusicName();
-                        playMusic(fileName);
+                        playMusic();
                         startPlayButton.Image = Image.FromFile(pathIcons + "pause.png");
                     }
                 }
@@ -52,9 +51,10 @@ namespace MusicApp
             }
         }
 
-        private string getMusicName()
+        private string getMusicPath()
         {
-            return musicBox.SelectedItem.ToString();
+       
+            return importedSongsPaths[musicBox.SelectedIndex].ToString();
         }
 
         private void prevSongButton_Click(object sender, EventArgs e)
@@ -86,7 +86,7 @@ namespace MusicApp
                 }
 
                 musicBox.SelectedIndex = Math.Min(index, musicBox.Items.Count - 1);
-                playMusic(getMusicName());
+                playMusic();
             }
         }
 
@@ -98,7 +98,6 @@ namespace MusicApp
             {
                 if (FBD.SelectedPath != null)
                 {
-                    selectedFolderPath = FBD.SelectedPath;
                     musicBox.Items.Clear();
 
                     string[] files = Directory.GetFiles(FBD.SelectedPath); 
@@ -106,23 +105,20 @@ namespace MusicApp
                     {
                         var extension = Path.GetExtension(file);
                         if (extension != null && extension.Contains("mp3")) 
-                        { 
+                        {
+                           
                             string fileName = Path.GetFileNameWithoutExtension(file); 
-                            musicBox.Items.Add(fileName); 
-
+                            musicBox.Items.Add(fileName);
+                            importedSongsPaths.Add(musicBox.Items.Count - 1, FBD.SelectedPath + "\\" + fileName + extension);
                         }
                     }
                 }
             }
         }
 
-        public void playMusic(string file)
+        public void playMusic()
         {
-            string filePath = file;
-            if (!String.IsNullOrEmpty(this.selectedFolderPath))
-            {
-                filePath = this.selectedFolderPath + "\\" + file + ".mp3";
-            }
+            string filePath = getMusicPath();
 
             if (!File.Exists(filePath))
             {
@@ -335,14 +331,21 @@ namespace MusicApp
 
         private void musicBox_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
         }
 
         private void musicBox_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, true);
             foreach (string file in files)
-                musicBox.Items.Add(file);
+            {
+                string songName = Path.GetFileName(file);
+                musicBox.Items.Add(songName);
+                importedSongsPaths.Add(musicBox.Items.Count - 1, file);
+            }
         }
 
         private void shuffleMusicButton_Click(object sender, EventArgs e)
@@ -353,7 +356,7 @@ namespace MusicApp
                 int randomSong = random.Next(1, musicBox.Items.Count - 1);
 
                 musicBox.SelectedIndex = randomSong;
-                playMusic(getMusicName());
+                playMusic();
             }
         }
     }
